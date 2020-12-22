@@ -1,0 +1,79 @@
+{% extends 'firstapp/basic.html' %}
+{% load static %}
+{% load myfilters %}
+{% block title %}
+{% endblock %}
+{% block css %}
+<style>
+    body{
+        background-color:#f5f5f5;
+
+    }
+.main-area{
+    display: flex;
+    align-items: center;
+}
+.register-form{
+    width:100%;
+    max-width: 500px;
+    margin:auto;
+    margin-top:40px;
+    padding:20px;
+    background-color: #fff;
+    border-top: 5px solid #2BA977;
+    border-radius: 5px;
+}
+.mainheading{
+    text-align: center;
+}
+.errorlist{
+    color:red;
+}
+.signup-button{
+    background-color: #2BA977;
+    border-color: #2BA977;
+}
+.signup-button:hover{
+    background-color: #2BA977;
+    border-color: #2BA977;
+}
+.signup-button:focus{
+    background-color: #2BA977;
+    border-color: #2BA977;
+}
+
+</style>
+{% endblock %}
+
+{% block body%}
+<form method="POST">{% csrf_token %}
+<div class="main-area">
+<div class="register-form">
+{{ form.non_field_errors }}
+      <h2 class="mainheading">Wonder Shop</h2>
+      <h4 class="mainheading">Sign Up For Seller</h4>
+      <label for="id_email" class="login-labels">Email Address*</label> 
+      {{ form.email.errors }}
+      {{ form.email|addclass:'form-control'|addplaceholder:'Email Address'}}
+      
+      <label for="id_name" class="login-labels">Name*</label> 
+      {{ form.name.errors }}
+      {{ form.name|addclass:'form-control'|addplaceholder:'Your Name' }}
+      <label for="id_password1" class="login-labels">Password*</label> 
+      {{ form.password1.errors }}
+      {{ form.password1|addclass:'form-control'|addplaceholder:'Your Password' }}
+      <label for="id_password2" class="login-labels">Password Confirmation*</label> 
+      {{ form.password2.errors }}
+      {{ form.password2|addclass:'form-control'|addplaceholder:'Your Password' }}
+      <label for="id_gst" class="login-labels">GST*</label> 
+      {{ form.gst.errors }}
+      {{ form.gst|addclass:'form-control'|addplaceholder:'GST' }}
+      <label for="id_warehouse_location" class="login-labels">Warehouse Location*</label> 
+      {{ form.warehouse_location.errors }}
+      {{ form.warehouse_location|addclass:'form-control'|addplaceholder:'Warehouse Location' }}
+      <br>
+<button type="submit" class="btn btn-primary btn-lg signup-button">Signup</button>
+</form>
+</div>
+</div>
+{% endblock %}

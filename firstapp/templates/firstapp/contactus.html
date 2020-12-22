@@ -1,0 +1,30 @@
+{% extends 'firstapp/basic.html' %}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block css %}
+{% endblock %}
+
+{% block body%}
+<div class="container">
+<form method="POST">{% csrf_token %}
+<div class="mb-3">
+  <label for="name" class="form-label">Name</label>
+  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name">
+</div>
+<div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Email address</label>
+  <input type="email" name="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+</div>
+<div class="mb-3">
+  <label for="phone" class="form-label">Phone No.</label>
+  <input type="text" name="phone" class="form-control" id="phone" placeholder="Your Phone Number">
+</div>
+<div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Any Queries</label>
+  <textarea class="form-control" name="query" id="exampleFormControlTextarea1" rows="3"></textarea>
+</div>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+{% endblock %}

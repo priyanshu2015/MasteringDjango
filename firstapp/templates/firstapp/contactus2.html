@@ -1,0 +1,36 @@
+{% extends 'firstapp/basic.html' %}
+{% load static %}
+{% load myfilters %}
+{% block title %}
+{% endblock %}
+{% block css %}
+<style>
+.errorlist{
+    color:red;
+}
+</style>
+{% endblock %}
+
+{% block body%}
+<div class="container">
+<form method="POST">{% csrf_token %}
+<!--{{form.as_p}} -->
+{{ form.non_field_errors }}
+      <label for="id_email" class="login-labels">Email Address*</label> 
+      {{ form.email.errors }}
+      {{ form.email|addclass:'form-control'|addplaceholder:'Email Address'}}
+      
+      <label for="id_phone" class="login-labels">Phone No.*</label> 
+      {{ form.phone.errors }}
+      {{ form.phone|addclass:'form-control'|addplaceholder:'Password' }}
+      <label for="id_query" class="login-labels">Query*</label> 
+      {{ form.query.errors }}
+      {{ form.query|addclass:'form-control'|addplaceholder:'Any Query' }}
+      <label for="id_name" class="login-labels">Name*</label> 
+      {{ form.name.errors }}
+      {{ form.name|addclass:'form-control'|addplaceholder:'Your Name' }}
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+</div>
+{% endblock %}
