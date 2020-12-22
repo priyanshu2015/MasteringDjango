@@ -132,45 +132,6 @@ class LogoutViewUser(LogoutView):
 
 
 
-# class RegisterViewCustomer(CreateView):
-#     template_name = 'firstapp/registercustomer.html'
-#     form_class = RegistrationFormCustomer
-#     success_url = reverse_lazy('index')
-
-#     def post(self, request, *args, **kwargs):
-#         response = super().post(request, *args, **kwargs)
-#         if response.status_code == 302:
-#             return response
-#         else:
-#             try:
-#                 existing_user = CustomUser.objects.get(email = request.POST.get('email'), is_active = True)
-#                 if(existing_user.Types.CUSTOMER in existing_user.type):
-#                     return response
-#                 existing_user.type.append(existing_user.Types.CUSTOMER)
-#                 existing_user.save()
-#                 return redirect(reverse('index'))
-#             except:
-#                 return response
-#             return response
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
