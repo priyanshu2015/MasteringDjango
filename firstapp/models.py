@@ -30,10 +30,23 @@ from django.db.models import Q
 #     def __str__(self):
 #         return self.get_id_display()
 
+class LowercaseEmailField(models.EmailField):
+    """
+    Override EmailField to convert emails to lowercase before saving.
+    """
+    def to_python(self, value):
+        """
+        Convert email to lowercase.
+        """
+        value = super(LowercaseEmailField, self).to_python(value)
+        # Value can be None so check that it's a string before lowercasing.
+        if isinstance(value, str):
+            return value.lower()
+        return value
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     # username = None
-    email = models.EmailField(_('email address'), unique=True)
+    email = LowercaseEmailField(_('email address'), unique=True)
     name = models.CharField(max_length=255)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

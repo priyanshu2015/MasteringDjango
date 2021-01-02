@@ -97,17 +97,17 @@ class LoginViewUser(LoginView):
     template_name = "firstapp/login.html"
     #success_url = reverse_lazy('index')
 
-class RegisterViewSeller(LoginRequiredMixin, CreateView):
-    template_name = 'firstapp/registerseller.html'
-    form_class = RegistrationFormSeller2
-    success_url = reverse_lazy('index')
+# class RegisterViewSeller(LoginRequiredMixin, CreateView):
+#     template_name = 'firstapp/registerseller.html'
+#     form_class = RegistrationFormSeller2
+#     success_url = reverse_lazy('index')
 
-    def form_valid(self, form):
-        user = self.request.user
-        user.type.append(user.Types.SELLER)
-        user.save()
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         user = self.request.user
+#         user.type.append(user.Types.SELLER)
+#         user.save()
+#         form.instance.user = self.request.user
+#         return super().form_valid(form)
         
 
 class LogoutViewUser(LogoutView):
