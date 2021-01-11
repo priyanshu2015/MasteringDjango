@@ -1,0 +1,14 @@
+{% autoescape off %}
+Hi {{ user.name }},
+Thanks for signing up to WonderShop!
+
+To set up your account, Please click on the link to confirm your registration,
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+Thanks for using our site!
+
+Sincerely,
+WonderShop Team
+
+{% endautoescape %}
+

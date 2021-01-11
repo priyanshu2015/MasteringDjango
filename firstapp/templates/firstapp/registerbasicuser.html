@@ -46,12 +46,14 @@
 {% endblock %}
 
 {% block body%}
+
 <form method="POST">{% csrf_token %}
 <div class="main-area">
 <div class="register-form">
-{{ form.non_field_errors }}
+
       <h2 class="mainheading">Wonder Shop</h2>
       <h4 class="mainheading">Sign Up</h4>
+      <p class="errorlist">{{ form.non_field_errors }}</p>
       <label for="id_email" class="login-labels">Email Address*</label> 
       {{ form.email.errors }}
       {{ form.email|addclass:'form-control'|addplaceholder:'Email Address'}}
