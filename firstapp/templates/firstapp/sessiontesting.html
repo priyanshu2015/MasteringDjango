@@ -1,0 +1,14 @@
+{% extends 'firstapp/basic.html' %}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block css %}
+{% endblock %}
+
+{% block body%}
+{% if user.is_authenticated %}
+<h1>{{user.name}}</h1>
+{% endif %}
+{{ request.session.test }}
+{{ request.session.test2 }}
+{% endblock %}

@@ -37,11 +37,26 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #'django.contrib.sites',
 
     'firstapp',
     'seller',
     'django_hosts'
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'my_cache_table',
+    }
+}
+
+#SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+#SESSION_ENGINE = "django.contrib.sessions.backends.file"
+#SESSION_FILE_PATH = r"D:\Mastering Django\firstproject"
+#SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+#SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+#SESSION_CACHE_ALIAS
 
 MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',

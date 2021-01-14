@@ -125,6 +125,10 @@
 <main>
     Hello World!
 
+<h1>{{request.session.test}}</h1>
+{% if user.is_authenticated %}
+<h1>{{user.name}}</h1>
+{% endif %}
 {{age}}
 {{array}}
 {% for i in array %}

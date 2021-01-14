@@ -38,6 +38,18 @@ class Index(TemplateView):
         context = {'age':age, 'array':arr, 'dic':dic, 'context_old':context_old}
         return context
 
+def testsessions(request):
+    if request.session.get('test', False):
+        print(request.session["test"])
+    #request.session.set_expiry(1)
+    # if request.session['test']:
+    #     print(request.session['test'])
+    request.session['test'] = "testing"
+    request.session['test2'] = "testing2"
+    return render(request, "firstapp/sessiontesting.html")
+
+
+
 def contactus(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -121,7 +133,7 @@ class RegisterView(CreateView):
             user = CustomUser.objects.get(email = user_email)
             user.is_active = False
             user.save()
-            current_site = get_current_site(request)     #www.wondershop.in:8000
+            current_site = get_current_site(request)     #www.wondershop.in:8000  127.0.0.1:8000 
             mail_subject = 'Activate your account.'
             message = render_to_string('firstapp/registration/acc_active_email.html', {
                 'user': user,
@@ -129,7 +141,7 @@ class RegisterView(CreateView):
                 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
                 'token':account_activation_token.make_token(user),
             })
-            print(message)
+            #print(message)
             to_email = user_email   
             #form = RegistrationForm(request.POST)   # here we are again calling all its validations
             form = self.get_form()

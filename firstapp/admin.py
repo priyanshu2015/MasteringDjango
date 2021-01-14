@@ -164,3 +164,44 @@ admin.site.register(Customer)
 admin.site.register(Seller, SellerAdmin)
 admin.site.register(Contact)
 admin.site.register(SellerAdditional)
+
+
+#1 using simple database for sessions 
+from django.contrib.sessions.models import Session
+import pprint
+
+# If you remove this model admin below for sessions then you will see encrypted data only
+# class SessionAdmin(admin.ModelAdmin):
+#     def _session_data(self, obj):
+#         return obj.get_decoded()
+#     list_display = ['session_key', '_session_data', 'expire_date']
+# admin.site.register(Session, SessionAdmin)
+
+# class SessionAdmin(admin.ModelAdmin):
+#     def _session_data(self, obj):
+#         return pprint.pformat(obj.get_decoded()).replace('\n', '<br>\n')
+#     _session_data.allow_tags=True
+#     list_display = ['session_key', '_session_data', 'expire_date']
+#     readonly_fields = ['_session_data']
+#     exclude = ['session_data']
+#     date_hierarchy='expire_date'
+
+class SessionAdmin(admin.ModelAdmin):
+    def _session_data(self, obj):
+        return pprint.pformat(obj.get_decoded()).replace('\n', '<br>\n')
+    _session_data.allow_tags=True
+    list_display = ['session_key', '_session_data', 'expire_date']
+    readonly_fields = ['_session_data']
+    exclude = ['session_data']
+
+admin.site.register(Session, SessionAdmin)
+
+#admin.site.register(Session)
+
+
+#from django.contrib.sites.models import Site
+#admin.site.register(Site)
+
+
+# from django_cache.models import my_cache_table
+# admin.site.register(my_cache_table)

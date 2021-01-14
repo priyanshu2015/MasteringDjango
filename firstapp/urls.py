@@ -10,6 +10,7 @@ urlpatterns = [
     path('', views.Index.as_view(), name="index"),
     path('contactus/', views.contactus2, name="contact"),
     path('contactusclass/', views.ContactUs.as_view(), name="contactclass"),
+    path('testsessions/', views.testsessions, name="testsessions"),
 
     # Authentication Endpoints
     path('signup/', views.RegisterView.as_view(), name="signup"),
