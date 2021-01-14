@@ -44,12 +44,12 @@ INSTALLED_APPS = [
     'django_hosts'
 ]
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'my_cache_table',
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'LOCATION': 'my_cache_table',
+#     }
+# }
 
 #SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 #SESSION_ENGINE = "django.contrib.sessions.backends.file"
