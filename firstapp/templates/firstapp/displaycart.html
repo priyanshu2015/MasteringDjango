@@ -1,0 +1,58 @@
+{% extends 'firstapp/basic.html' %}
+{% load hosts %}
+{% load static %}
+{% load myfilters %}
+{% block title %}
+{% endblock %}
+{% block css %}
+<style>
+  .main-area {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 0px;
+    background-color: #f8f9fa;
+  }
+
+  .product-cards {
+    background-color: white;
+    padding: 10px;
+  }
+
+  .btn-primary {
+    margin: 10px;
+  }
+</style>
+{% endblock %}
+
+{% block body%}
+<div class="main-area">
+  <div class="product-cards">
+    <h1 style="text-align:center;">CART</h1>
+
+    {% for i in cart %}
+    <div class="row featurette">
+      <div class="col-md-2">
+        <img src="/media/{{i.product.image}}" class="card-img-top" alt="...">
+      </div>
+      <div class="col-md-7">
+        <h2 class="featurette-heading">{{i.product.product_name}}</h2>
+        <p class="lead">Rs. {{i.product.price}}</p>
+        <p class="lead">Quantity- {{i.quantity}}</p>
+        <form method="POST" action="{% url 'updatecart' pk=i.product_in_cart_id %}">{% csrf_token %}
+          <input type="text" id="id_quantity" name="quantity">
+          <button class="btn btn-primary" type="submit">Update Quantity</button>
+        </form>
+        <form method="POST" action="{% url 'deletefromcart' pk=i.product_in_cart_id %}">{% csrf_token %}
+          <button class="btn btn-primary" type="submit">Delete</button>
+        </form>
+      </div>
+
+    </div>
+    <hr>
+    {% empty %}
+    <h4>Empty Cart</h4>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

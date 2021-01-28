@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 # Register your models here.
 
-from .models import Cart, Product, ProductInCart, Order, Deal, Customer, Seller, Contact, SellerAdditional
+from .models import Cart, Product, ProductInCart, Order, Deal, Customer, Seller, Contact, SellerAdditional, OtpModel
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
@@ -123,7 +123,7 @@ class DealInline(admin.TabularInline):
 @admin.register(Cart) # through register decorator
 class CartAdmin(admin.ModelAdmin):
     model = Cart
-    list_display = ('staff', 'user', 'created_on',)    # here user__is_staff will not work   
+    list_display = ('user','staff', 'created_on',)    # here user__is_staff will not work   
     list_filter = ('user', 'created_on',)
     #fields = ('staff',)           # either fields or fieldset
     fieldsets = (
@@ -205,3 +205,6 @@ admin.site.register(Session, SessionAdmin)
 
 # from django_cache.models import my_cache_table
 # admin.site.register(my_cache_table)
+
+
+admin.site.register(OtpModel)

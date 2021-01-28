@@ -1,0 +1,40 @@
+{% extends 'firstapp/basic.html' %}
+{% load static %}
+{% load myfilters %}
+{% block title %}
+{% endblock %}
+{% block css %}
+<style>
+    .main-area {
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 0px;
+        background-color: #f8f9fa;
+    }
+
+    .product-cards {
+        background-color: white;
+        padding: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block body%}
+<div class="main-area">
+    <div class="product-cards">
+        <div class="row featurette">
+            <div class="col-md-5">
+                <img src="/media/{{product.image}}" class="card-img-top" alt="...">
+
+            </div>
+            <div class="col-md-7">
+                <h2 class="featurette-heading">{{product.product_name}}</h2>
+                <p class="lead">Rs. {{product.price}}</p>
+                <a class="btn btn-primary" href="{% url 'addtocart' id=product.product_id %}">Add To Cart</a>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+{% endblock %}

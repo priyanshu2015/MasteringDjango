@@ -1,0 +1,62 @@
+{% extends 'firstapp/basic.html' %}
+{% load hosts %}
+{% load static %}
+{% load myfilters %}
+{% block title %}
+{% endblock %}
+{% block css %}
+<style>
+.main-area{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 0px;
+    background-color: #f8f9fa;
+}
+.product-cards{
+    background-color: white;
+    padding: 10px;
+}
+.btn-primary{
+  margin:10px;
+}
+</style>
+{% endblock %}
+
+{% block body%}
+<div class="main-area">
+<div class="product-cards">
+<div class="row row-cols-1 row-cols-md-4 g-4">
+{% for i in product %}
+  <div class="col">
+    <div class="card h-100">
+      <img src="/media/{{i.image}}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title"><a href="{% host_url 'productdetail' pk=i.pk host 'www' %}">{{i.product_name}}</a></h5>
+        <p class="card-text">{{i.price}}</p>
+      </div>
+      <!--
+      <form method="POST" action="{% url 'addtocart' id=i.product_id %}">{% csrf_token %}
+        <select name="quantity" id="quantity" hidden>
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+      <button class="btn btn-primary" type="submit">Add To Cart</button>
+      </form>
+      -->
+      <a class="btn btn-primary" href="{% url 'addtocart' id=i.product_id %}">Add To Cart</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>
+
+</div>
+{% endblock %}

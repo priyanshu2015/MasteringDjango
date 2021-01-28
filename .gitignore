@@ -10,3 +10,13 @@ db.sqlite3
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+
+testasync.py
+sendotp.html
+verifyotp.html
+otp_settings.txt
+views2.py
+
+media
+static
+static_cdn

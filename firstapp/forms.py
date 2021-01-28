@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import CustomUser, Contact, Customer, Seller, SellerAdditional
+from .models import CustomUser, Contact, Customer, Seller, SellerAdditional, ProductInCart
 from django import forms
 from django.core.validators import RegexValidator
 
@@ -64,6 +64,34 @@ class RegistrationFormSeller2(forms.ModelForm):
             'gst',
             'warehouse_location'
         ]
+
+
+class SendOtpBasicForm(forms.Form):
+    phone_regex = RegexValidator( regex = r'^\d{10}$',message = "phone number should exactly be in 10 digits")
+    phone = forms.CharField(max_length=255, validators=[phone_regex])
+
+    class Meta:
+        fields = [
+            'phone',
+        ]
+
+class VerifyOtpBasicForm(forms.Form):
+    otp_regex = RegexValidator( regex = r'^\d{4}$',message = "otp should be in six digits")
+    otp = forms.CharField(max_length=6, validators=[otp_regex])
+
+    # class Meta:
+    #     field
+
+
+
+class CartForm(forms.ModelForm):
+    class Meta:
+        model = ProductInCart
+        fields = [
+            'quantity'
+        ]
+    
+    
 
 
 
