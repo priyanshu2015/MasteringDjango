@@ -162,13 +162,16 @@ class Contact(models.Model):
 
 
 
-
-
 class Product(models.Model):
     product_id = models.AutoField(primary_key=True)
     product_name = models.CharField(max_length=15)
     image = models.ImageField(upload_to = "firstapp/productimages", default = None, null = True, blank = True)
     price = models.FloatField()
+    brand = models.CharField(max_length=1000)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-price']      # default ordering whenever you query to database    retrieval in order as stored in DB ---> ordering ---> returned as a queryset where called
 
     @classmethod
     def updateprice(cls,product_id, price):
@@ -246,4 +249,12 @@ class OtpModel(models.Model):
     
     # expiry_after_verified
 
+
+
+# class Category(models.Model):
+#     category_name = models.CharField(max_length=1000)
+
+# class Subcategory(models.Model):
+#     subcategory_name = models.CharField(max_length=1000)
+#     category = models.ForeignKey(Category, on_delete = models.CASCADE)
     

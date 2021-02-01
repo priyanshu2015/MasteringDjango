@@ -16,13 +16,16 @@ urlpatterns = [
     path('testsessions/', views.testsessions, name="testsessions"),
     #path('firstasyncview/', views.firstasyncview, name="firstasyncview"),
 
-    path('listproducts/', views.ListProducts.as_view(), name="listproducts"),
-    #path('listproducts/', views.listProducts, name="listproducts"),
+    #path('listproducts/', views.ListProducts.as_view(), name="listproducts"),
+    path('listproducts/', views.listProducts, name="listproducts"),
     path('productdetail/<int:pk>/', views.ProductDetail.as_view(), name="productdetail"),
     path('addtocart/<int:id>/', views.addToCart, name="addtocart"),
     path('displaycart/', views.DisplayCart.as_view(), name="displaycart"),
     path('updatecart/<int:pk>/', views.UpdateCart.as_view(), name="updatecart"),
     path('deletefromcart/<int:pk>/', views.DeleteFromCart.as_view(), name="deletefromcart"),
+
+    path('api/listproductsapi/', views.listProductsApi, name="listproductsapi"),
+    path('api/suggestionapi/', views.suggestionApi, name="suggestionapi"),
 
 
     # Authentication Endpoints

@@ -5,58 +5,174 @@
 {% block title %}
 {% endblock %}
 {% block css %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <style>
-.main-area{
+  .main-area {
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 0px;
     background-color: #f8f9fa;
-}
-.product-cards{
+  }
+
+  .product-cards {
     background-color: white;
     padding: 10px;
-}
-.btn-primary{
-  margin:10px;
-}
+  }
+
+  .btn-primary {
+    margin: 10px;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+
+  .utility {
+    display: flex;
+  }
 </style>
 {% endblock %}
 
 {% block body%}
 <div class="main-area">
-<div class="product-cards">
-<div class="row row-cols-1 row-cols-md-4 g-4">
-{% for i in product %}
-  <div class="col">
-    <div class="card h-100">
-      <img src="/media/{{i.image}}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title"><a href="{% host_url 'productdetail' pk=i.pk host 'www' %}">{{i.product_name}}</a></h5>
-        <p class="card-text">{{i.price}}</p>
-      </div>
-      <!--
-      <form method="POST" action="{% url 'addtocart' id=i.product_id %}">{% csrf_token %}
-        <select name="quantity" id="quantity" hidden>
-          <option value="1" selected>1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-        </select>
-      <button class="btn btn-primary" type="submit">Add To Cart</button>
+  <div class="product-cards">
+    <div class="utility">
+      <!-- For Making A Search Bar -->
+      <form method="GET" action="/listproducts/" class="d-flex">
+        <input class="form-control me-2" name="search" id="search" type="search" placeholder="Search"
+          aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
-      -->
-      <a class="btn btn-primary" href="{% url 'addtocart' id=i.product_id %}">Add To Cart</a>
+
+      <!-- For filtering based on Price -->
+      <select name="price" id="price-list" onchange="location = finalurl2();" style="margin-left: auto;">
+        <option value="" id="price-placeholder" disabled selected hidden>Price</option>
+        <option id="pr500" value="500">less than 500</option>
+        <option id="pr1000" value="1000">less than 1000</option>
+        <option id="pr2000" value="2000">less than 2000</option>
+        <option id="pr10000" value="10000">less than 10000</option>
+      </select>
+
+      <!-- For making sorting functionality -->
+      <select name="sort" id="sort-list" onchange="location = finalurl();" style="margin-left: auto;">
+        <option value="" id="placeholder" disabled selected hidden>Sort</option>
+        <option id="price" value="price">Price: Low To High</option>
+        <option id="-price" value="-price">Price: High To Low</option>
+        <option id="product_name" value="product_name">Product Name</option>
+        <option id="-date_added" value="-date_added">What's New</option>
+      </select>
+
+
+
     </div>
+    <br>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+      {% for i in product %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="/media/{{i.image}}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title"><a
+                href="{% host_url 'productdetail' pk=i.product_id host 'www' %}">{{i.product_name}}</a>
+            </h5>
+            <p class="card-text">{{i.price}}</p>
+          </div>
+          <a class="btn btn-primary" href="{% url 'addtocart' id=i.product_id %}">Add To Cart</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+
+    
+
+    <br>
+
+    <!-- **Now the pagination section** .... -->
+    {% if is_paginated %}
+    <nav class="pagination">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" tabindex="-1" aria-disabled="true"
+            href="/listproducts/?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+        {% for i in paginator.page_range %}
+        {% if i == page_obj.number%}
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="/listproducts/?page={{i}}" span class="visually-hidden">{{i}}</span></a>
+        </li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="/listproducts/?page={{i}}">{{i}}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" tabindex="-1" href="/listproducts/?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
   </div>
-  {% endfor %}
-</div>
-</div>
+
+
 
 </div>
+{% endblock %}
+
+{% block js %}
+<script>
+  // for getting the sorting status to be displayed in sorting dropdown placeholder
+  function get(name) {
+    if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))  //location.search give query sling part
+      return decodeURIComponent(name[1]);
+  }
+
+  if(get('ordering'))
+  document.getElementById('placeholder').innerHTML = "Sort: " + document.getElementById(get('ordering')).innerHTML;
+
+  if(get('price'))
+  document.getElementById('price-placeholder').innerHTML = "Price: " + document.getElementById('pr'+get('price')).innerHTML;
+
+
+
+  
+  
+
+  // for getting url after applying ordering
+  function finalurl() {
+    var url = new URL(window.location.href);
+    var search_params = url.searchParams;
+    search_params.set('ordering', document.getElementById("sort-list").value);
+    url.search = search_params.toString();
+    var new_url = url.toString();
+    return new_url
+  }
+  
+  // for getting url after applying price filtering
+  function finalurl2() {
+    var url = new URL(window.location.href);
+    var search_params = url.searchParams;
+    search_params.set('price', document.getElementById("price-list").value);
+    url.search = search_params.toString();
+    var new_url = url.toString();
+    return new_url
+  }
+
+</script>
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+  // for giving suggestions in search box by calling an API
+  $(function () {
+    $("#search").autocomplete({
+      source: '{% url 'suggestionapi' %}',
+      minLength: 2
+    });
+  });
+</script>
 {% endblock %}
