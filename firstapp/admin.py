@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 # Register your models here.
 
-from .models import Cart, Product, ProductInCart, Order, Deal, Customer, Seller, Contact, SellerAdditional, OtpModel
+from .models import Cart, Product, ProductInCart, Order, ProductInOrder, Deal, Customer, Seller, Contact, SellerAdditional, OtpModel
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
@@ -154,10 +154,20 @@ class CartAdmin(admin.ModelAdmin):
 #     exclude = ('user',)
 
 
+
+class ProductInOrderInline(admin.TabularInline):
+    model = ProductInOrder
+
+@admin.register(Order) # through register decorator
+class CartAdmin(admin.ModelAdmin):
+    model = Cart
+    inlines = (
+        ProductInOrderInline,
+    )
+
 #admin.site.register(Cart)
 admin.site.register(Product)
 admin.site.register(ProductInCart)
-admin.site.register(Order)
 admin.site.register(Deal)#, DealAdmin)
 #admin.site.register(UserType)
 admin.site.register(Customer)
@@ -195,6 +205,8 @@ class SessionAdmin(admin.ModelAdmin):
     exclude = ['session_data']
 
 admin.site.register(Session, SessionAdmin)
+
+admin.site.register(ProductInOrder)
 
 #admin.site.register(Session)
 

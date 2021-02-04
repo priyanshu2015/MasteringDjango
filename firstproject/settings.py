@@ -178,3 +178,8 @@ DEFAULT_FROM_EMAIL = 'Testing <priyanshuguptacontact@gmail.com>'
 #PASSWORD_RESET_TIMEOUT_DAYS = "7"
 
 
+# PAYMENT GATEWAY SETTINGS
+razorpay_id = "rzp_test_N8qzOUbSVfTEex"
+razorpay_account_id = "FGvI3GMiWqLM0GRq25K9SeRV"
+
+

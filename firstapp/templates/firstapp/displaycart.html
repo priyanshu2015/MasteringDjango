@@ -52,6 +52,10 @@
     {% empty %}
     <h4>Empty Cart</h4>
     {% endfor %}
+
+    <form method="POST" action="/payment/">{% csrf_token %}
+    <button class="btn btn-primary" type="submit">Proceed for Payment</button>
+    </form>
   </div>
 
 </div>

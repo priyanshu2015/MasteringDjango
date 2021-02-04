@@ -21,6 +21,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -350,6 +351,88 @@ class UpdateCart(LoginRequiredMixin, UpdateView):
 class DeleteFromCart(LoginRequiredMixin, DeleteView):
     model = ProductInCart
     success_url = reverse_lazy("displaycart")  
+
+
+
+# Adding Payment Gateway
+import razorpay
+razorpay_client = razorpay.Client(auth=(settings.razorpay_id, settings.razorpay_account_id))
+
+from .models import Order, ProductInOrder, Cart
+
+@login_required
+def payment(request):
+    if request.method == "POST":
+        try:
+            cart = Cart.objects.get(user = request.user)
+            products_in_cart = ProductInCart.objects.filter(cart = cart)
+            final_price = 0
+            if(len(products_in_cart)>0):
+                order = Order.objects.create(user = request.user, total_amount = 0)
+                # order.save()
+                for product in products_in_cart:
+                    product_in_order = ProductInOrder.objects.create(order = order, product = product.product, quantity = product.quantity, price = product.product.price)
+                    final_price = final_price + (product.product.price * product.quantity)
+            else:
+                return HttpResponse("No product in cart")
+        except:
+            return HttpResponse("No product in cart")
+
+        order.total_amount = final_price
+        order.save()
+
+        order_currency = 'INR'
+
+        callback_url = 'http://'+ str(get_current_site(request))+"/handlerequest/"
+        print(callback_url)
+        notes = {'order-type': "basic order from the website", 'key':'value'}
+        razorpay_order = razorpay_client.order.create(dict(amount=final_price*100, currency=order_currency, notes = notes, receipt=order.order_id, payment_capture='0'))
+        print(razorpay_order['id'])
+        order.razorpay_order_id = razorpay_order['id']
+        order.save()
+        
+        return render(request, 'firstapp/payment/paymentsummaryrazorpay.html', {'order':order, 'order_id': razorpay_order['id'], 'orderId':order.order_id, 'final_price':final_price, 'razorpay_merchant_id':settings.razorpay_id, 'callback_url':callback_url})
+    else:
+        return HttpResponse("505 Not Found") 
+
+
+@csrf_exempt
+def handlerequest(request):
+    if request.method == "POST":
+        try:
+            payment_id = request.POST.get('razorpay_payment_id', '')
+            order_id = request.POST.get('razorpay_order_id','')
+            signature = request.POST.get('razorpay_signature','')
+            params_dict = { 
+            'razorpay_order_id': order_id, 
+            'razorpay_payment_id': payment_id,
+            'razorpay_signature': signature
+            }
+            try:
+                order_db = Order.objects.get(razorpay_order_id=order_id)
+            except:
+                return HttpResponse("505 Not Found")
+            order_db.razorpay_payment_id = payment_id
+            order_db.razorpay_signature = signature
+            order_db.save()
+            result = razorpay_client.utility.verify_payment_signature(params_dict)
+            if result==None:
+                amount = order_db.total_amount * 100   #we have to pass in paisa
+                try:
+                    razorpay_client.payment.capture(payment_id, amount)
+                    order_db.payment_status = 1
+                    order_db.save()
+                    return render(request, 'firstapp/payment/paymentsuccess.html')
+                except:
+                    order_db.payment_status = 2
+                    order_db.save()
+                    return render(request, 'firstapp/payment/paymentfailed.html')
+            else:
+                order_db.payment_status = 2
+                order_db.save()
+                return render(request, 'firstapp/payment/paymentfailed.html')
+        except:
+            return HttpResponse("505 not found")
 
 
 
