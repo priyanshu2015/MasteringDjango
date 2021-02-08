@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.http import JsonResponse
-from django.views.generic import TemplateView, FormView, CreateView, ListView, UpdateView, DeleteView, DetailView
+from django.views.generic import TemplateView, FormView, CreateView, ListView, UpdateView, DeleteView, DetailView, View
 from django.core.exceptions import ValidationError
 from .forms import ContactUsForm, RegistrationFormSeller, RegistrationForm, RegistrationFormSeller2, CartForm
 from django.urls import reverse_lazy, reverse
@@ -396,6 +396,29 @@ def payment(request):
         return HttpResponse("505 Not Found") 
 
 
+# for generating pdf invoice
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+import os
+
+
+
+def fetch_resources(uri, rel):
+    path = os.path.join(uri.replace(settings.STATIC_URL, ""))
+    return path
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)#, link_callback=fetch_resources)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+
 @csrf_exempt
 def handlerequest(request):
     if request.method == "POST":
@@ -422,8 +445,45 @@ def handlerequest(request):
                     razorpay_client.payment.capture(payment_id, amount)
                     order_db.payment_status = 1
                     order_db.save()
-                    return render(request, 'firstapp/payment/paymentsuccess.html')
+
+                    ## For generating Invoice PDF
+                    template = get_template('firstapp/payment/invoice.html')
+                    data = {
+                        'order_id': order_db.order_id,
+                        'transaction_id': order_db.razorpay_payment_id,
+                        'user_email': order_db.user.email,
+                        'date': str(order_db.datetime_of_payment),
+                        'name': order_db.user.name,
+                        'order': order_db,
+                        'amount': order_db.total_amount,
+                    }
+                    html  = template.render(data)
+                    result = BytesIO()
+                    print("hello1")
+                    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)#, link_callback=fetch_resources)
+                    print("hello3")
+                    pdf = result.getvalue()
+                    filename = 'Invoice_' + data['order_id'] + '.pdf'
+
+                    mail_subject = 'Recent Order Details'
+                    message = render_to_string('firstapp/payment/emailinvoice.html', {
+                        'user': order_db.user,
+                        'order': order_db
+                    })
+                    to_email = order_db.user.email
+                    print("hello2")
+                    email = EmailMessage(
+                        mail_subject,
+                        message, 
+                        settings.EMAIL_HOST_USER,
+                        [to_email]
+                    )
+                    email.attach(filename, pdf, 'application/pdf')
+                    email.send(fail_silently=True)
+
+                    return render(request, 'firstapp/payment/paymentsuccess.html',{'id':order_db.id})
                 except:
+                    print("hello")
                     order_db.payment_status = 2
                     order_db.save()
                     return render(request, 'firstapp/payment/paymentfailed.html')
@@ -433,6 +493,37 @@ def handlerequest(request):
                 return render(request, 'firstapp/payment/paymentfailed.html')
         except:
             return HttpResponse("505 not found")
+
+
+class GenerateInvoice(View):
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            order_db = Order.objects.get(id = pk, user = request.user, payment_status = 1)     #you can filter using order_id as well
+        except:
+            return HttpResponse("505 Not Found")
+        data = {
+            'order_id': order_db.order_id,
+            'transaction_id': order_db.razorpay_payment_id,
+            'user_email': order_db.user.email,
+            'date': str(order_db.datetime_of_payment),
+            'name': order_db.user.name,
+            'order': order_db,
+            'amount': order_db.total_amount,
+        }
+        pdf = render_to_pdf('firstapp/payment/invoice.html', data)
+        #return HttpResponse(pdf, content_type='application/pdf')
+
+        # force download
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Invoice_%s.pdf" %(data['order_id'])
+            content = "inline; filename='%s'" %(filename)
+            #download = request.GET.get("download")
+            #if download:
+            content = "attachment; filename=%s" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
 
 
 

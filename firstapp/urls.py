@@ -16,8 +16,8 @@ urlpatterns = [
     path('testsessions/', views.testsessions, name="testsessions"),
     #path('firstasyncview/', views.firstasyncview, name="firstasyncview"),
 
-    path('listproducts/', views.ListProducts.as_view(), name="listproducts"),
-    #path('listproducts/', views.listProducts, name="listproducts"),
+    #path('listproducts/', views.ListProducts.as_view(), name="listproducts"),
+    path('listproducts/', views.listProducts, name="listproducts"),
     path('productdetail/<int:pk>/', views.ProductDetail.as_view(), name="productdetail"),
     path('addtocart/<int:id>/', views.addToCart, name="addtocart"),
     path('displaycart/', views.DisplayCart.as_view(), name="displaycart"),
@@ -30,6 +30,8 @@ urlpatterns = [
     # Payment APIs
     path('payment/', views.payment, name = 'payment'),
     path('handlerequest/', views.handlerequest, name = 'handlerequest'),
+    # Generating Invoice
+    path('generateinvoice/<int:pk>/', views.GenerateInvoice.as_view(), name = 'generateinvoice'),
 
 
     # Authentication Endpoints

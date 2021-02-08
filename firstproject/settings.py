@@ -11,9 +11,18 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import environ
+env = environ.Env(
+    # set casting, default value,  if DEBUG=True/On in .env then True otherwise False
+    DEBUG=(bool, False)
+)
+# reading .env file
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -102,7 +111,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'TestDB',
+    #     'USER': 'root',
+    #     'PASSWORD': '',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '3306',
+    # }
 }
 
 
@@ -172,14 +189,14 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER ='priyanshuguptacontact@gmail.com'
-EMAIL_HOST_PASSWORD = 'lcgehupmstipijvx'
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'Testing <priyanshuguptacontact@gmail.com>'
 
 #PASSWORD_RESET_TIMEOUT_DAYS = "7"
 
 
 # PAYMENT GATEWAY SETTINGS
-razorpay_id = "rzp_test_N8qzOUbSVfTEex"
-razorpay_account_id = "FGvI3GMiWqLM0GRq25K9SeRV"
+razorpay_id = env('RAZORPAY_ID')
+razorpay_account_id = env('razorpay_account_id')
 
 

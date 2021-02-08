@@ -55,7 +55,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     # if you require phone number field in your project
     phone_regex = RegexValidator( regex = r'^\d{10}$',message = "phone number should exactly be in 10 digits")
-    phone = models.CharField(max_length=255, validators=[phone_regex], blank = True, null=True)  # you can it set unique = True
+    phone = models.CharField(max_length=255, validators=[phone_regex], blank = True, null=True)  # you can set it unique = True
 
     # is_customer = models.BooleanField(default=True)
     # is_seller = models.BooleanField(default = False)

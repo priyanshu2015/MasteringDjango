@@ -20,3 +20,5 @@ views2.py
 media
 static
 static_cdn
+.env
+data.json

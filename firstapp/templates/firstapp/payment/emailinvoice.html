@@ -1,0 +1,19 @@
+{% autoescape off %}
+Hi {{ user.name }},
+Your order with order id: {{order.order_id}} has been placed successfully.
+
+Your order consists of - 
+{% for i in order.productinorder_set.all %}
+Product:{{i.product}} Quantity:{{i.quantity}} Price:{{i.price}}
+{% endfor %}
+Total:{{order.total_amount}}
+
+Order will reach to you in 5-7 days.
+
+We have attached the invoice for your order with this mail.
+
+Thanks for trusting us and using our services!
+
+Sincerely,
+WonderShop Team
+{% endautoescape %}
