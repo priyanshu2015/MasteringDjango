@@ -459,9 +459,7 @@ def handlerequest(request):
                     }
                     html  = template.render(data)
                     result = BytesIO()
-                    print("hello1")
                     pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)#, link_callback=fetch_resources)
-                    print("hello3")
                     pdf = result.getvalue()
                     filename = 'Invoice_' + data['order_id'] + '.pdf'
 
@@ -471,7 +469,6 @@ def handlerequest(request):
                         'order': order_db
                     })
                     to_email = order_db.user.email
-                    print("hello2")
                     email = EmailMessage(
                         mail_subject,
                         message, 
@@ -483,7 +480,6 @@ def handlerequest(request):
 
                     return render(request, 'firstapp/payment/paymentsuccess.html',{'id':order_db.id})
                 except:
-                    print("hello")
                     order_db.payment_status = 2
                     order_db.save()
                     return render(request, 'firstapp/payment/paymentfailed.html')
