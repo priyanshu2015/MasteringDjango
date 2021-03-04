@@ -72,9 +72,7 @@
         <div class="card h-100">
           <img src="/media/{{i.image}}" class="card-img-top" alt="...">
           <div class="card-body">
-            <h5 class="card-title"><a
-                href="{% host_url 'productdetail' pk=i.product_id host 'www' %}">{{i.product_name}}</a>
-            </h5>
+            <h5 class="card-title"><a href="{% host_url 'productdetail' pk=i.product_id host 'www' %}">{{i.product_name}}</a></h5>
             <p class="card-text">{{i.price}}</p>
           </div>
           <a class="btn btn-primary" href="{% url 'addtocart' id=i.product_id %}">Add To Cart</a>

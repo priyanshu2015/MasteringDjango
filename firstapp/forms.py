@@ -90,10 +90,6 @@ class CartForm(forms.ModelForm):
         fields = [
             'quantity'
         ]
-    
-    
-
-
 
 
 

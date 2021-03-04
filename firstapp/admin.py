@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 # Register your models here.
 
-from .models import Cart, Product, ProductInCart, Order, ProductInOrder, Deal, Customer, Seller, Contact, SellerAdditional, OtpModel
+from .models import Cart, Product, ProductInCart, Order, ProductInOrder, Deal, Customer, Seller, Contact, SellerAdditional, OtpModel, PremiumProduct
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
@@ -23,7 +23,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('email', 'is_staff', 'is_active',)
     fieldsets = (
         (None, {'fields': ('email', 'phone', 'name','type', 'password')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active')}),   #'is_customer' , 'is_seller'
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions',)}),   #'is_customer' , 'is_seller'
     )
     add_fieldsets = (
         (None, {
@@ -220,3 +220,4 @@ admin.site.register(ProductInOrder)
 
 
 admin.site.register(OtpModel)
+admin.site.register(PremiumProduct)

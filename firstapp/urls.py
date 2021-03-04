@@ -14,7 +14,7 @@ urlpatterns = [
     path('contactus/', views.contactus2, name="contact"),
     path('contactusclass/', views.ContactUs.as_view(), name="contactclass"),
     path('testsessions/', views.testsessions, name="testsessions"),
-    #path('firstasyncview/', views.firstasyncview, name="firstasyncview"),
+    path('firstasyncview/', views.firstasyncview, name="firstasyncview"),
 
     #path('listproducts/', views.ListProducts.as_view(), name="listproducts"),
     path('listproducts/', views.listProducts, name="listproducts"),
@@ -23,6 +23,11 @@ urlpatterns = [
     path('displaycart/', views.DisplayCart.as_view(), name="displaycart"),
     path('updatecart/<int:pk>/', views.UpdateCart.as_view(), name="updatecart"),
     path('deletefromcart/<int:pk>/', views.DeleteFromCart.as_view(), name="deletefromcart"),
+
+    
+    path('addtopremium/', views.addToPremiumGroup, name="addtopremium"),
+    #path('premiumproducts/', views.premiumProducts, name="premiumproducts"),
+    path('premiumproducts/', views.PremiumProducts.as_view(), name="premiumproducts"),
 
     path('api/listproductsapi/', views.listProductsApi, name="listproductsapi"),
     path('api/suggestionapi/', views.suggestionApi, name="suggestionapi"),
@@ -63,9 +68,9 @@ urlpatterns = [
 
 
 # when debug=True
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL ,document_root = settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL ,document_root = settings.MEDIA_ROOT)
+#if settings.DEBUG:
+    #urlpatterns += static(settings.STATIC_URL ,document_root = settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL ,document_root = settings.MEDIA_ROOT)
 
 
 

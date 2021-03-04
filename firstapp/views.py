@@ -418,7 +418,7 @@ def render_to_pdf(template_src, context_dict={}):
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
 
-
+from django.core.mail import EmailMultiAlternatives
 @csrf_exempt
 def handlerequest(request):
     if request.method == "POST":
@@ -464,19 +464,34 @@ def handlerequest(request):
                     filename = 'Invoice_' + data['order_id'] + '.pdf'
 
                     mail_subject = 'Recent Order Details'
-                    message = render_to_string('firstapp/payment/emailinvoice.html', {
+                    # message = render_to_string('firstapp/payment/emailinvoice.html', {
+                    #     'user': order_db.user,
+                    #     'order': order_db
+                    # })
+                    context_dict = {
                         'user': order_db.user,
                         'order': order_db
-                    })
+                    }
+                    template = get_template('firstapp/payment/emailinvoice.html')
+                    message  = template.render(context_dict)
                     to_email = order_db.user.email
-                    email = EmailMessage(
+                    # email = EmailMessage(
+                    #     mail_subject,
+                    #     message, 
+                    #     settings.EMAIL_HOST_USER,
+                    #     [to_email]
+                    # )
+
+                    # for including css(only inline css works) in mail and remove autoescape off
+                    email = EmailMultiAlternatives(
                         mail_subject,
-                        message, 
+                        "hello",       # necessary to pass some message here
                         settings.EMAIL_HOST_USER,
                         [to_email]
                     )
+                    email.attach_alternative(message, "text/html")
                     email.attach(filename, pdf, 'application/pdf')
-                    email.send(fail_silently=True)
+                    email.send(fail_silently=False)
 
                     return render(request, 'firstapp/payment/paymentsuccess.html',{'id':order_db.id})
                 except:
@@ -520,6 +535,103 @@ class GenerateInvoice(View):
             response['Content-Disposition'] = content
             return response
         return HttpResponse("Not found")
+
+
+
+
+
+
+# Relating To Group
+
+# to make a new group you can do that like any other models by creating a new record in it
+
+# associating a user to a group
+from django.contrib.auth.models import Group
+@login_required
+def addToPremiumGroup(request):
+    group = Group.objects.get(name="premium")
+    request.user.groups.add(group)
+    return HttpResponse("successfully added")
+
+
+# checking group not permission 
+# in function based view inside the view or "custom decorator"
+from .models import PremiumProduct
+# from .decorators import group_required
+# @group_required('premium')
+# def premiumProducts(request):       
+#     #if request.user.groups.filter(name = "premium").exists():
+#         product = PremiumProduct.objects.all()
+#         return render(request, "firstapp/listpremiumproducts.html", {"product":product})
+
+#     #else:
+#         #return HttpResponse("Only for premium members")
+
+# # in class based view inside the view or a "custom mixin"
+# from .mixins import CheckPremiumGroupMixin
+# class PremiumProducts(CheckPremiumGroupMixin, ListView):
+#     template_name = "firstapp/listpremiumproducts.html"
+#     model = PremiumProduct
+#     context_object_name = "product"
+#     #paginate_by = 2
+
+
+
+# Relating To Permission
+# checking permission and that permission can belong to that user or to the group that user is associated
+from django.contrib.auth.decorators import permission_required
+@permission_required('firstapp.view_premiumproduct')
+def premiumProducts(request):
+    # ct = ContentType.objects.get_for_model(PremiumProduct)     
+    # if request.user.permissions.filter(codename = "view_premiumproducts" , contentype = ct).exists():
+    
+    #if request.user.has_perm('firstapp.view_premiumproduct'):
+        product = PremiumProduct.objects.all()
+        return render(request, "firstapp/listpremiumproducts.html", {"product":product})
+    # else:
+    #     return HttpResponse("Not allowed")
+
+
+from django.contrib.auth.mixins import PermissionRequiredMixin
+class PremiumProducts(PermissionRequiredMixin, ListView):
+    template_name = "firstapp/listpremiumproducts.html"
+    model = PremiumProduct
+    context_object_name = "product"
+    paginate_by = 2
+    permission_required = "firstapp.view_premiumproduct"  # if using PermissionRequiredMixin
+
+
+# for creating permissions
+#1 Creating Custom Model Depenedent Permission through Code
+#from django.contrib.auth.models import Group, ContentType, Permission
+# ct = ContentType.objects.get_for_model(PremiumProduct)
+# permission = Permission.objects.create(codename="can_do_this", contentype = ct)
+
+
+#2 Creating Custom Model Dependent Permission by adding in Meta of that model
+
+#3 Creating Custom Model Independent Permission by creating a separate model for permissions
+
+# filtering existing permissions
+# ct = ContentType.obejcts.get_for_model(PremiumProduct)
+# permission = Permission.objects.get(codename='view_premiumproduct', content_type=ct)
+
+
+# Adding permission to user
+# user.permissions.add(permission)
+
+# Adding permission to group
+# new_group, created = Group.objects.get_or_create(name="new_group")
+# new_group.permissions.add(permission)
+
+
+
+
+
+
+
+
+
 
 
 

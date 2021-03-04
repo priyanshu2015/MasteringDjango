@@ -50,7 +50,12 @@ INSTALLED_APPS = [
 
     'firstapp',
     'seller',
-    'django_hosts'
+    'django_hosts',
+
+    #'channels',
+
+    #Gunicorn development server
+    #'dj_static',
 ]
 
 # CACHES = {
@@ -73,11 +78,17 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',   #method_is_async = False
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_hosts.middleware.HostsResponseMiddleware'
 ]
+
+
+# AUTHENTICATION_BACKENDS = (
+#     'firstapp.backends.MyAuthBackend', # our custom authentication backend
+#     'django.contrib.auth.backends.ModelBackend' # fallback to default authentication backend if first fails 
+#     )
 
 ROOT_URLCONF = 'firstproject.urls'
 ROOT_HOSTCONF = 'firstproject.hosts'
@@ -102,6 +113,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'firstproject.wsgi.application'
+
+ASGI_APPLICATION = 'firstproject.asgi.application'
 
 
 # Database

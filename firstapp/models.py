@@ -170,8 +170,8 @@ class Product(models.Model):
     brand = models.CharField(max_length=1000)
     date_added = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        ordering = ['-price']      # default ordering whenever you query to database    retrieval in order as stored in DB ---> ordering ---> returned as a queryset where called
+    #class Meta:
+        #ordering = ['-price']      # default ordering whenever you query to database    retrieval in order as stored in DB ---> ordering ---> returned as a queryset where called
 
     @classmethod
     def updateprice(cls,product_id, price):
@@ -292,3 +292,80 @@ class OtpModel(models.Model):
 # class Subcategory(models.Model):
 #     subcategory_name = models.CharField(max_length=1000)
 #     category = models.ForeignKey(Category, on_delete = models.CASCADE)
+
+
+
+class PremiumProduct(models.Model):
+    product_name = models.CharField(max_length=15)
+    image = models.ImageField(upload_to = "firstapp/premiumproductimages", default = None, null = True, blank = True)
+    price = models.FloatField()
+    brand = models.CharField(max_length=1000)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    # # custom permissions dependent to a specific model
+    class Meta:
+        permissions = (
+            ('can_avail_premium_delivery', 'can avail for premium delivery on premium products'),
+            ('can_add_premium_discount', 'can avail more premium discount on premium products')
+       )
+
+
+
+class CustomPermissions(models.Model):
+
+    class Meta:
+
+        managed = False  # No database table creation or deletion  \
+                         # operations will be performed for this model.
+
+        default_permissions = () # disable "add", "change", "delete"
+                                 # and "view" default permissions
+
+        # All the custom permissions not related to models on Manufacturer
+        permissions = (
+            ('accept_order', 'can accept order'),
+            ('reject_order', 'can reject order'),
+            ('view_order', 'can view order'),
+            ('change_order', 'can change order'),
+            ('view_return', 'can view return'),
+            ('accept_return', 'can accept return'),
+            ('reject_return', 'can reject return'),
+            ('change_return', 'can change return'),
+            ('view_dashboard', 'can view dashboard'),
+        )
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

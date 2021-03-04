@@ -22,3 +22,5 @@ static
 static_cdn
 .env
 data.json
+backends.py
+testsocket.py

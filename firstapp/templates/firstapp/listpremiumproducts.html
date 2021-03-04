@@ -1,0 +1,72 @@
+{% extends 'firstapp/basic.html' %}
+{% load hosts %}
+{% load static %}
+{% load myfilters %}
+{% block title %}
+{% endblock %}
+{% block css %}
+<style>
+  .main-area {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 0px;
+    background-color: #f8f9fa;
+  }
+
+  .product-cards {
+    background-color: white;
+    padding: 10px;
+  }
+
+  .btn-primary {
+    margin: 10px;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+
+  .utility {
+    display: flex;
+  }
+</style>
+{% endblock %}
+
+{% block body%}
+<div class="main-area">
+  <div class="product-cards">
+    <div class="utility">
+
+
+
+
+    </div>
+    <br>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+      {% for i in product %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="/media/{{i.image}}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title"><a href="#">{{i.product_name}}</a></h5>
+            <p class="card-text">{{i.price}}</p>
+          </div>
+          <a class="btn btn-primary" href="#">Add To Cart</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+
+    
+
+    <br>
+  </div>
+
+
+
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}
